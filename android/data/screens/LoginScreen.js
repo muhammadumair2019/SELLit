@@ -8,7 +8,7 @@ const ValidationSchema = Yup.object().shape({
     email: Yup.string().required().email().label("Email"),
     password: Yup.string().required().min(4).label("Password")
 })
-function LoginView(props) {
+function LoginView({navigation}) {
     return (
         <ImageBackground blurRadius={3} style = {styles.background} source={require('../images/background.jpg')}>
          <View style={{flex:1}}>
@@ -21,12 +21,13 @@ function LoginView(props) {
                     onSubmit={(values) => {
                         auth().signInWithEmailAndPassword(values.email,values.password).then(() => {
                             console.log('User signed in');
-                        })
+                            
+                        }  )
                           .catch( (error) => {
                               var errorcode = error.errorcode;
                               var errorMessage = error. errorMessage;
                           }
-                          ) 
+                          )  
                     } } 
 
                     

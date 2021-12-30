@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View,TextInput,StyleSheet,TouchableWithoutFeedback,TouchableOpacity,Text,Modal, Button, FlatList} from 'react-native';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import React, { useState ,useEffect,useRef} from 'react';
+import { Image,View,TextInput,StyleSheet,TouchableWithoutFeedback,TouchableOpacity,Text,Modal, Button, FlatList,ScrollView} from 'react-native';
+import * as ImagePicker from 'react-native-image-picker';
+
 const Categories = [
     {label: 'Furniture' , value: 1},
     {label: 'SmartPhone' , value: 2},
@@ -10,27 +10,23 @@ const Categories = [
     {label: 'Sports' , value: 5},
     {label: 'Other' , value: 6}
 ]
-const ValidationSchema = Yup.object().shape({
-    title: Yup.string().required().label("Title"),
-    price: Yup.string().required().max(100000).label("Price"),
-    description: Yup.string().required().label("Title")
-})
+
+
 
 function NewPosting(props) {
     const [modalVisible,setModalVisible]= useState(false);
+
+    const [title,setTitle]= useState('');
+    const [price,setPrice]= useState('');
+    const [description,setDescription]= useState('');
+    const [bid,setBid]= useState('');
+    const [image,setImage] = useState();
+
     const [selectCategory,setSelectCategory]= useState('Category');
     return (
         <View>
-            <Formik
-                    initialValues={{title: '' , price: '',description: ''}}
-                    onSubmit={(values) => {console.log(values)} } 
-
-                    
-
-                    validationSchema={ValidationSchema}
-                    >
-                    {({handleChange,handleSubmit,errors,setFieldTouched,touched}) => (
-                        <>
+            
+            <ImageInput imageUri={images}/>
 
             <View>
             <TextInput
@@ -40,11 +36,8 @@ function NewPosting(props) {
                     keyboardType="default"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    onChangeText={handleChange('title')}
-                    onBlur={() => setFieldTouched('title')}
-                    
-                    />
-                    {touched.title && <Text style={{color:'red',marginLeft:25}}>{errors.title}</Text>}
+                    onChangeText={(e) => setTitle(e)}
+                  />
             </View>
 
             <View>
@@ -55,11 +48,8 @@ function NewPosting(props) {
                     keyboardType="number-pad"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    onChangeText={handleChange('price')}
-                    onBlur={() => setFieldTouched('price')}
-                    
+                    onChangeText={(e) => setPrice(e)}
                     />
-                    {touched.price && <Text style={{color:'red',marginLeft:25}}>{errors.price}</Text>}
             </View>
 
             <View>
@@ -91,11 +81,22 @@ function NewPosting(props) {
                     keyboardType="default"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    onChangeText={handleChange('description')}
-                    onBlur={() => setFieldTouched('description')}
+                    onChangeText={(e) => setDescription(e)}
                     
                     />
-                    {touched.description && <Text style={{color:'red',marginLeft:25}}>{errors.description}</Text>}
+            </View>
+
+            <View>
+            <TextInput
+                    
+                    style={styles.TextField}
+                    placeholder="Enter Bid"
+                    keyboardType="number-pad"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onChangeText={(e) => setBid(e)}
+                    
+                    />
             </View>
 
             <View style={{alignItems:'center',justifyContent:'center',marginTop:20}}>
@@ -107,14 +108,11 @@ function NewPosting(props) {
                     borderRadius:50,
                     alignItems:'center',
                     justifyContent:'center'
-                }} onPress={handleSubmit}
+                }} 
                 ><Text style={{color:'white',fontWeight:'bold',fontFamily:'roboto'}}>POST</Text></TouchableOpacity>
             </View>
-                       
-            </>
-                    )
-                    }
-                    </Formik>      
+                        
+                 
 
         </View>
     );
@@ -130,7 +128,27 @@ const styles = StyleSheet.create({
         fontFamily:'roboto',
         padding: 10,
         width: 370
-    }
+    },
+    container: {
+        alignItems: "center",
+        backgroundColor: 'lightgrey',
+        borderRadius: 15,
+        height: 100,
+        justifyContent: "center",
+        marginVertical: 10,
+        overflow: "hidden",
+        width: 100,
+      },
+      image: {
+        height: "100%",
+        width: "100%",
+      },
+      containerlist: {
+        flexDirection: "row",
+      },
+      imagelist: {
+        marginRight: 10,
+      },
 })
 
 export default NewPosting;
